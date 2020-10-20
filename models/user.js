@@ -6,7 +6,12 @@ const bcrypt = require("bcrypt");
 // create our User model extended off of the Sequelize Model class.
 //this allows User to inherit functionality from Model
 // (i.e. creating, reading, updating, and deleting data from a database)
-class User extends Model {}
+class User extends Model {
+  // set up method to run on instance data (per user) to check password
+  checkPassword(loginPw) {
+    return bcrypt.compareSync(loginPw, this.password);
+  }
+}
 
 // define table columns and configuration
 User.init(

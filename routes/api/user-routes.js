@@ -52,6 +52,41 @@ router.post("/", (req, res) => {
     });
 });
 
+//creating a user login route
+//we use the POST method, because its more secure than GET, coz it c
+// arries the request parameter in req.body
+//which is a secure way fo transferring data from client to server,
+// coz the password is currently in plaintext
+router.post("/login", (req, res) => {
+  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+  User.findOne({
+    where: {
+      email: req.body.email,
+    },
+  }).then((dbUserData) => {
+    if (!dbUserData) {
+      res.status(400).json({ message: "No user with that email address!" });
+      return;
+    }
+
+    // add comment syntax in front of this line in the .then()
+    //we will move this line of code to after the password check
+    // res.json({ user: dbUserData }
+
+    //we typically want to use the async version, because its better for user experience
+    //but to speed the process in our small app, we'll use the sync version.
+
+    // Verify user
+    const validPassword = dbUserData.checkPassword(req.body.password);
+    if (!validPassword) {
+      res.status(400).json({ message: "Incorrect password!" });
+      return;
+    }
+
+    res.json({ user: dbUserData, message: "You are now logged in!" });
+  });
+});
+
 // PUT /api/users/1
 router.put("/:id", (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
