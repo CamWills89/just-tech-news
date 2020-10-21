@@ -53,8 +53,8 @@ router.post("/", (req, res) => {
 });
 
 //creating a user login route
-//we use the POST method, because its more secure than GET, coz it c
-// arries the request parameter in req.body
+//we use the POST method, because its more secure than GET, coz it 
+// carries the request parameter in req.body
 //which is a secure way fo transferring data from client to server,
 // coz the password is currently in plaintext
 router.post("/login", (req, res) => {
@@ -92,6 +92,7 @@ router.put("/:id", (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
   // if req.body has exact key/value pairs to match the model, you can just use `req.body` instead
+  //but this updates everything. you can and sometimes should be more specific eg: req.body.something
   User.update(req.body, {
     individualHooks: true,
     where: {
