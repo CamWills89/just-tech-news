@@ -53,7 +53,7 @@ router.post("/", (req, res) => {
 });
 
 //creating a user login route
-//we use the POST method, because its more secure than GET, coz it 
+//we use the POST method, because its more secure than GET, coz it
 // carries the request parameter in req.body
 //which is a secure way fo transferring data from client to server,
 // coz the password is currently in plaintext
