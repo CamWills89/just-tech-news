@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 //this allows User to inherit functionality from Model
 // (i.e. creating, reading, updating, and deleting data from a database)
 class User extends Model {
-  // set up method to run on instance data (per user) to check password
+  // set up method to run on instance data (per user) to check password (this is an instance method)
   checkPassword(loginPw) {
     return bcrypt.compareSync(loginPw, this.password);
   }

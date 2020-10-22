@@ -2,6 +2,8 @@
 const User = require("./User");
 //importing the post model
 const Post = require("./Post");
+//importing the vote model
+const Vote = require("./Vote");
 
 // create associations
 //there is a "One to Many" relationship because a user
@@ -19,5 +21,45 @@ Post.belongsTo(User, {
   foreignKey: "user_id",
 });
 
+//these will connect User and post to each other THROUGH the vote model
+//when we query Post, we see how many votes a user creates
+//when we query User, we see all the posts they voted on
+//this allows User and Post models to query eac other's info
+//in the constext of a vote.
+//one user cant vote on 1 post multiple times, this is called a Foreign Key Constraint
+User.belongsToMany(Post, {
+  through: Vote,
+  as: "voted_posts",
+  foreignKey: "user_id",
+});
+
+Post.belongsToMany(User, {
+  through: Vote,
+  as: "voted_posts",
+  foreignKey: "post_id",
+});
+
+//creating one-to-man relationships btwn Vote & User and Vote & Post
+//this lets us see a total count of votes for a single post when queried
+//Here, we are connecting Vote to User
+Vote.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+
+//Here, we are connecting Vote to Post
+Vote.belongsTo(Post, {
+  foreignKey: 'post_id'
+});
+
+//Here, we are connecting Vote to User
+User.hasMany(Vote, {
+  foreignKey: 'user_id'
+});
+
+//Here, we are connecting Vote to Post
+Post.hasMany(Vote, {
+  foreignKey: 'post_id'
+});
+
 //exporting and object with User as a property
-module.exports = { User, Post };
+module.exports = { User, Post, Vote };
