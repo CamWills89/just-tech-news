@@ -4,6 +4,8 @@ const User = require("./User");
 const Post = require("./Post");
 //importing the vote model
 const Vote = require("./Vote");
+//importing the Comments model
+const Comment = require("./Comment");
 
 // create associations
 //there is a "One to Many" relationship because a user
@@ -61,5 +63,25 @@ Post.hasMany(Vote, {
   foreignKey: 'post_id'
 });
 
-//exporting and object with User as a property
-module.exports = { User, Post, Vote };
+//we dont have to specify Comment as a through table, coz we dont need access to Post through Comment
+//we just need to see user's comments and which post its for. 
+
+//creating the model associations for Comments
+Comment.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+
+Comment.belongsTo(Post, {
+  foreignKey: 'post_id'
+});
+
+User.hasMany(Comment, {
+  foreignKey: 'user_id'
+});
+
+Post.hasMany(Comment, {
+  foreignKey: 'post_id'
+});
+
+//exporting and object with User, Post, Vote, Comment as properties
+module.exports = { User, Post, Vote, Comment };
