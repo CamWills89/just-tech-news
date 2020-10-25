@@ -1,0 +1,10 @@
+<ol class="post-list">
+    {{!-- {{the #each begins the loop and the /each ends it. it repeats everything in btwn for each post ie thje li item  }} --}}
+    {{#each posts as |post|}}
+    <li>
+        {{!-- {{all we need to use a partial is the '>' character and the 
+        name of the partial file and the object we'll pass to the partial}} --}}
+        {{> post-info post }}
+    </li>
+    {{/each}}
+</ol>

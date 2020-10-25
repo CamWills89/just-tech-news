@@ -1,0 +1,27 @@
+{{!-- {{use partial for the posts here}} --}}
+{{> post-info post}}
+
+{{!-- {{the if works like JS IF, it checks truthy values only. so this shows the 
+buttons and text area only if a user is logged in} --}}
+{{#if loggedIn}}
+<form class="comment-form">
+    <div>
+        <textarea name="comment-body"></textarea>
+    </div>
+
+    <div>
+        <button type="submit">add comment</button>
+        <button type="button" class="upvote-btn">upvote</button>
+    </div>
+</form>
+{{/if}}
+
+{{!-- {{use partial for the comments here}} --}}
+{{> comments post.comments}}
+
+{{! -- this will only send these js files if someone is logged in, so we dont 
+get console errors looking for files that dont exist when a user ISNT logged in}}
+{{#if loggedIn}}
+<script src="/javascript/comment.js"></script>
+<script src="/javascript/upvote.js"></script>
+{{/if}}
