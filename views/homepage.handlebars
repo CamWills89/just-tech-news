@@ -2,19 +2,9 @@
     {{!-- {{the #each begins the loop and the /each ends it. it repeats everything in btwn for each post ie thje li item  }} --}}
     {{#each posts as |post|}}
     <li>
-        <article class="post">
-            <div class="title">
-                {{!-- {{th 2 brackets converts HTML characters to string, so < becomes &lt}} --}}
-                <a href="{{post.post_url}}" target="_blank">{{post.title}}</a>
-                <span>({{post.post_url}})</span>
-            </div>
-            <div class="meta">
-                {{post.vote_count}} point(s) by {{post.user.username}} on
-                {{post.created_at}}
-                |
-                <a href="/post/{{id}}">{{post.comments.length}} comment(s)</a>
-            </div>
-        </article>
+        {{!-- {{all we need to use a partial is the '>' character and the 
+        name of the partial file and the object we'll pass to the partial}} --}}
+        {{> post-info post }}
     </li>
     {{/each}}
 </ol>
