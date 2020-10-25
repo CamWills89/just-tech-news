@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const { Comment } = require("../../models");
+//importin AuthGaurd
+const withAuth = require('../../utils/auth');
 
 router.get("/", (req, res) => {
   // Access our User model and run .findAll() method
@@ -11,7 +13,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
   // check the session, IF statement to ensure only logged in users can comment
   if (req.session) {
     Comment.create({
@@ -28,7 +30,7 @@ router.post('/', (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", withAuth, (req, res) => {
   Comment.destroy({
     where: {
       id: req.params.id,

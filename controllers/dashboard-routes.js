@@ -1,13 +1,15 @@
 const router = require("express").Router();
 const sequelize = require("../config/connection");
 const { Post, User, Comment } = require("../models");
+//importin AuthGaurd
+const withAuth = require("../utils/auth");
 
-
-//this uses the template engine/ so we use res.render to send the homepage template.
-//we can enter an object a 2nd argument, which includes the data we want to send
-router.get("/", (req, res) => {
-  console.log(req.session);
+router.get("/", withAuth, (req, res) => {
   Post.findAll({
+    where: {
+      // use the ID from the session for a logged in user
+      user_id: req.session.user_id,
+    },
     attributes: [
       "id",
       "post_url",
@@ -36,18 +38,9 @@ router.get("/", (req, res) => {
     ],
   })
     .then((dbPostData) => {
-      console.log(dbPostData[0]);
-      // pass a single post object into the homepage template
-      //we use sequelizes get method to serialize the data so we can use it in handlebars
-      //we didnt need to do this with api routes, bcoz res.json() already does that for us
-      //we map through the post data to return an array of all the posts to send to the html
-      //but this array will break the page, but handlebarsJs has helpers that allow
-      // us to lopo over arrays, which we add in homepage.handlebars
+      // serialize data before passing to template
       const posts = dbPostData.map((post) => post.get({ plain: true }));
-      res.render("homepage", {
-        posts,
-        loggedIn: req.session.loggedIn,
-      });
+      res.render("dashboard", { posts, loggedIn: true });
     })
     .catch((err) => {
       console.log(err);
@@ -55,17 +48,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/login", (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect("/");
-    return;
-  }
-
-  res.render("login");
-});
-
-//creaiting the single-post template object
-router.get("/post/:id", (req, res) => {
+router.get("/edit/:id", withAuth, (req, res) => {
   Post.findOne({
     where: {
       id: req.params.id,
@@ -106,11 +89,9 @@ router.get("/post/:id", (req, res) => {
       // serialize the data
       const post = dbPostData.get({ plain: true });
 
-      // pass data to template. pass session variable to the template too
-      //this lets us do something if a user is logged in or not
-      res.render("single-post", {
+      res.render("edit-post", {
         post,
-        loggedIn: req.session.loggedIn,
+        loggedIn: true,
       });
     })
     .catch((err) => {
