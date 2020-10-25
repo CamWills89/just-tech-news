@@ -104,14 +104,24 @@ router.post("/", (req, res) => {
 });
 
 // PUT /api/posts/upvote
+// this uses the saved user_id property from the session to insert
+//a new record into the vote table. so the upvote feature will now only work
+//if someone is logged in so we can grab their user_id
 router.put("/upvote", (req, res) => {
   // custom static method (upvote) created in models/Post.js
-  Post.upvote(req.body, { Vote })
-    .then((updatedPostData) => res.json(updatedPostData))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+  // make sure the session exists first
+  if (req.session) {
+    // pass session id(which is the saved user_id) along with all destructured properties on req.body
+    Post.upvote(
+      { ...req.body, user_id: req.session.user_id },
+      { Vote, Comment, User }
+    )
+      .then((updatedVoteData) => res.json(updatedVoteData))
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  }
 });
 
 router.put("/:id", (req, res) => {
